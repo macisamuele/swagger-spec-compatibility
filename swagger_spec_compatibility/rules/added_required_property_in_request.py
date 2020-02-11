@@ -37,4 +37,11 @@ class AddedRequiredPropertyInRequest(BaseRule):
                 continue
             if not is_path_in_top_level_paths(request_parameters_paths, required_property_diff.path):
                 continue
-            yield cls.validation_message(format_path(required_property_diff.path))
+            yield cls.validation_message(
+                reference=format_path(required_property_diff.path),
+                message='\n\t{} {}: {}'.format(
+                    required_property_diff.path[2],
+                    required_property_diff.path[1],
+                    required_property_diff.mapping.new,
+                ),
+            )
