@@ -53,17 +53,23 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
 
 
 @pytest.mark.parametrize(
-    'old_parameter_schema, new_parameter_schema, expected_references',
+    'old_parameter_schema, new_parameter_schema, expected_references, expected_messages',
     [
         (
             {'type': 'string', 'enum': ['v1', 'v2']},
             {'type': 'string', 'enum': ['v1']},
             [''],
+            ['{\'v2\'} in property `schema`\n'],
         ),
         (
             {
                 'properties': {
-                    'property_1': {'type': 'string', 'enum': ['v1', 'v2']},
+                    'property_1': {
+                        'properties': {
+                            'inner_1': {'type': 'string', 'enum': ['v1', 'v2']},
+                        },
+                        'type': 'object',
+                    },
                 },
                 'type': 'object',
             },
@@ -78,7 +84,8 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
                 },
                 'type': 'object',
             },
-            ['/properties/property_1'],
+            ['/properties/property_1/properties/inner_1'],
+            ['{\'v2\'} in property `inner_1`\n'],
         ),
         (
             {
@@ -106,11 +113,14 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
                 'type': 'object',
             },
             [],
+            [],
         ),
     ],
 )
 def test_validate_return_an_error(
-    minimal_spec_dict, simple_operation_dict, old_parameter_schema, new_parameter_schema, expected_references,
+    minimal_spec_dict, simple_operation_dict,
+    old_parameter_schema, new_parameter_schema,
+    expected_references, expected_messages,
 ):
     old_spec_dict = dict(
         minimal_spec_dict,
@@ -135,8 +145,9 @@ def test_validate_return_an_error(
     expected_results = [
         RemovedEnumValueFromRequest.validation_message(
             reference='#/paths//endpoint/get/parameters/0/schema{}'.format(reference),
+            message='\n\tget /endpoint: removed enum value {}'.format(message),
         )
-        for reference in expected_references
+        for reference, message in zip(expected_references, expected_messages)
     ]
     assert list(RemovedEnumValueFromRequest.validate(
         left_spec=old_spec,

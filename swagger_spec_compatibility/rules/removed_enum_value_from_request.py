@@ -37,4 +37,12 @@ class RemovedEnumValueFromRequest(BaseRule):
                 continue
             if not is_path_in_top_level_paths(request_parameters_paths, enum_values_diff.path):
                 continue
-            yield cls.validation_message(format_path(enum_values_diff.path))
+            yield cls.validation_message(
+                reference=format_path(enum_values_diff.path),
+                message='\n\t{} {}: removed enum value {} in property `{}`\n'.format(
+                    enum_values_diff.path[2],
+                    enum_values_diff.path[1],
+                    enum_values_diff.mapping.old,
+                    enum_values_diff.path[-1],
+                ),
+            )
