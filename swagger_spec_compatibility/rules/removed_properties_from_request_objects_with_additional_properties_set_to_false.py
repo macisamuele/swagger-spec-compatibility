@@ -40,4 +40,20 @@ class RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse(Base
                 continue
             if not is_path_in_top_level_paths(request_parameter_paths, additional_properties_diff.path):
                 continue
-            yield cls.validation_message(format_path(additional_properties_diff.path))
+
+            if additional_properties_diff.properties:
+                message = '\n\t{} {}: {}\n'.format(
+                    additional_properties_diff.path[2],
+                    additional_properties_diff.path[1],
+                    additional_properties_diff.properties.old,
+                )
+            else:
+                message = '\n\t{} {}\n'.format(
+                    additional_properties_diff.path[2],
+                    additional_properties_diff.path[1],
+                )
+
+            yield cls.validation_message(
+                reference=format_path(additional_properties_diff.path),
+                message=message,
+            )

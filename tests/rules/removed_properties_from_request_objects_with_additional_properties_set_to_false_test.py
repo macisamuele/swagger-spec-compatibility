@@ -60,7 +60,7 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
 
 
 @pytest.mark.parametrize(
-    'old_parameter_schema, new_parameter_schema, expected_references',
+    'old_parameter_schema, new_parameter_schema, expected_references, expected_messages',
     [
         (
             {
@@ -78,6 +78,7 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
                 },
                 'type': 'object',
             },
+            [''],
             [''],
         ),
         (
@@ -107,6 +108,7 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
                 'type': 'object',
             },
             ['/properties/property_1'],
+            ['/properties/property_1'],
         ),
         (
             {
@@ -135,11 +137,14 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
                 'type': 'object',
             },
             [],
+            [],
         ),
     ],
 )
 def test_validate_return_an_error(
-    minimal_spec_dict, simple_operation_dict, old_parameter_schema, new_parameter_schema, expected_references,
+    minimal_spec_dict, simple_operation_dict,
+    old_parameter_schema, new_parameter_schema,
+    expected_references, expected_messages,
 ):
     old_spec_dict = dict(
         minimal_spec_dict,
@@ -164,8 +169,9 @@ def test_validate_return_an_error(
     expected_results = [
         RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validation_message(
             reference='#/paths//endpoint/get/parameters/0/schema{}'.format(reference),
+            message=message,
         )
-        for reference in expected_references
+        for reference, message in zip(expected_references, expected_messages)
     ]
     assert list(RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
         left_spec=old_spec,
