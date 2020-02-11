@@ -52,11 +52,19 @@ def test_RuleRegistry_rule_with_not_existing_rule(mock_RuleRegistry):
         RuleRegistry.rule(mock.Mock())
 
 
-def test_ValidationMessage_string_representation():
+@pytest.mark.parametrize(
+    'message, expected_representation',
+    [
+        (None, '[TEST_NO_MSG] DummyRule: reference'),
+        ('Message', '[TEST_NO_MSG] DummyRule: Message'),
+    ],
+)
+def test_ValidationMessage_string_representation(message, expected_representation):
     assert ValidationMessage(
         level=Level.ERROR,
         rule=DummyRule,
         reference='reference',
+        message=None,
     ).string_representation() == '[TEST_NO_MSG] DummyRule: reference'
 
 

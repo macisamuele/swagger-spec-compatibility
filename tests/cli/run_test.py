@@ -103,6 +103,7 @@ def test__print_json_messages(capsys, warning_message, error_message_library_rul
                 'reference': 'reference',
                 'short_name': 'DummyWarningRule',
                 'documentation': None,
+                'message': None,
             },
         ],
         'ERROR': [
@@ -111,6 +112,7 @@ def test__print_json_messages(capsys, warning_message, error_message_library_rul
                 'error_code': 'MIS-E002',
                 'reference': 'reference',
                 'short_name': 'Changed type',
+                'message': None,
             },
         ],
     }

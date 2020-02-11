@@ -142,6 +142,7 @@ class ValidationMessage(typing.NamedTuple(
         ('level', Level),
         ('rule', typing.Type[RuleProtocol]),
         ('reference', typing.Text),
+        ('message', typing.Optional[typing.Text]),
     ),
 )):
     def string_representation(self):
@@ -149,7 +150,7 @@ class ValidationMessage(typing.NamedTuple(
         documentation_link = get_rule_documentation_link(self.rule)
         return '[{error_code}] {short_name}: {reference}{more_info}'.format(
             error_code=self.rule.error_code,
-            reference=self.reference,
+            reference=self.reference if self.message is None else self.message,
             short_name=self.rule.short_name,
             more_info=' (documentation: {})'.format(documentation_link) if documentation_link else '',
         )
@@ -161,6 +162,7 @@ class ValidationMessage(typing.NamedTuple(
             'reference': self.reference,
             'short_name': self.rule.short_name,
             'documentation': get_rule_documentation_link(self.rule),
+            'message': self.message,
         }
 
 
@@ -200,10 +202,11 @@ class BaseRule(with_metaclass(RuleRegistry)):
         )
 
     @classmethod
-    def validation_message(cls, reference):
-        # type: (typing.Text) -> ValidationMessage
+    def validation_message(cls, reference, message=None):
+        # type: (typing.Text, typing.Optional[typing.Text]) -> ValidationMessage
         return ValidationMessage(
             level=cls.error_level,
             rule=cls,
             reference=reference,
+            message=message,
         )
