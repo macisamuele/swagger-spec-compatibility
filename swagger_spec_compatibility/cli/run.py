@@ -93,6 +93,7 @@ def execute(cli_args):
         old_spec=old_spec,
         new_spec=new_spec,
         rules=rules(cli_args),
+        max_parallelism=cli_args.max_parallelism,
     )
 
     messages_by_level = {
