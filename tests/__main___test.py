@@ -33,7 +33,7 @@ def test_main_explain_succeed(mock_RuleRegistry, capsys):
     assert 'Rule description' in out
 
 
-def test_main_run_succeed(mock_SwaggerClient, mock_RuleRegistry_empty, capsys):
+def test_main_run_succeed(mock_ProcessPoolExecutor, mock_SwaggerClient, mock_RuleRegistry_empty, capsys):
     mock_RuleRegistry_empty['DummyRule'] = DummyRule
     assert main(['run', __file__, __file__]) == 0
     capsys.readouterr()

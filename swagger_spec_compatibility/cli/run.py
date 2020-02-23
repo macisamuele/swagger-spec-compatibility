@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import concurrent.futures.process  # Using long import to simplify testing
 import json
 import sys
 import typing
@@ -84,9 +85,13 @@ def _print_json_messages(messages_by_level):
 
 def execute(cli_args):
     # type: (_Namespace) -> int
+
+    with concurrent.futures.process.ProcessPoolExecutor(max_workers=min(cli_args.max_parallelism, 2)) as pool:
+        old_spec, new_spec = pool.map(load_spec_from_uri, [cli_args.old_spec, cli_args.new_spec])
+
     rules_to_messages_mapping = compatibility_status(
-        old_spec=load_spec_from_uri(cli_args.old_spec),
-        new_spec=load_spec_from_uri(cli_args.new_spec),
+        old_spec=old_spec,
+        new_spec=new_spec,
         rules=rules(cli_args),
     )
 

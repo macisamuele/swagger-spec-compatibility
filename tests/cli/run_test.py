@@ -26,6 +26,7 @@ def cli_args():
         rules=('DummyRule',),
         blacklist_rules=(),
         strict=False,
+        max_parallelism=1,
         old_spec='memory://',
         new_spec='memory://',
     )
@@ -46,7 +47,7 @@ def error_message_library_rule():
 @mock.patch('swagger_spec_compatibility.cli.run._print_raw_messages', autospec=True)
 @mock.patch('swagger_spec_compatibility.cli.run._print_json_messages', autospec=True)
 def test_execute(
-    mock__print_json_messages, mock__print_raw_messages, capsys,
+    mock__print_json_messages, mock__print_raw_messages, mock_ProcessPoolExecutor, capsys,
     cli_args, json_output, mock_SwaggerClient, mock_RuleRegistry, strict,
 ):
     cli_args.strict = strict

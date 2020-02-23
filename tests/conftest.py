@@ -145,3 +145,10 @@ def mock_RuleRegistry_empty():
 def mock_SwaggerClient():
     with mock.patch('swagger_spec_compatibility.spec_utils.SwaggerClient', autospec=True) as m:
         yield m
+
+
+@pytest.fixture
+def mock_ProcessPoolExecutor():
+    with mock.patch('concurrent.futures.process.ProcessPoolExecutor', autospec=True) as m:
+        m.return_value.__enter__.return_value.map.side_effect = map
+        yield m
