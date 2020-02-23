@@ -7,6 +7,7 @@ import argparse
 import json
 import sys
 import typing
+from multiprocessing import cpu_count
 
 from six import iteritems
 
@@ -26,8 +27,17 @@ class _Namespace(CLIProtocol):
     rules = None  # type: typing.Iterable[typing.Text]
     strict = None  # type: bool
     json_output = None  # type: bool
+    max_parallelism = None  # type: int
     old_spec = None  # type: typing.Text
     new_spec = None  # type: typing.Text
+
+
+def _positive_integer(value):
+    # type: (typing.Text) -> int
+    int_value = int(value)
+    if int_value <= 0:
+        raise argparse.ArgumentTypeError('{} is an invalid non-negative int value'.format(value))
+    return int_value
 
 
 def _extract_rules_with_given_message_level(
@@ -111,6 +121,12 @@ def add_sub_parser(subparsers):
         '--json-output',
         action='store_true',
         help='Return machine readable json output',
+    )
+    run_detection_parser.add_argument(
+        '--max-parallelism',
+        default=cpu_count(),
+        type=_positive_integer,
+        help='Maximum number of concurrent sub-processes allowed to run.',
     )
     run_detection_parser.add_argument(
         'old_spec',
