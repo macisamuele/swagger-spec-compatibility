@@ -15,7 +15,8 @@ setup(
     url='https://github.com/Yelp/swagger-spec-compatibility',
     install_requires=[
         'bravado',
-        'bravado-core != 5.16.0',
+        # 'bravado-core >= 5.17.0',
+        'bravado-core @ https://github.com/macisamuele/bravado-core/archive/master.zip',
         'swagger-spec-validator',
         'six',
         'termcolor',
