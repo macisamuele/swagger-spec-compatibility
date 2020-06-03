@@ -4,17 +4,17 @@ matrix:
   include:
   # Please remember to keep TOXENV environment variable and python attribute in sync.
   # This is a workaround to make sure that we can run tests on OSX and Windows (that have no "native" support for python)
-  - {env: TOXENV=pre-commit, python: '3.6', os: linux, dist: xenial, language: python}
-  - {env: TOXENV=py27, python: '2.7', os: linux, dist: xenial, language: python}
-  - {env: TOXENV=py27, python: '2.7', os: osx, osx_image: xcode10, language: generic}
-  - {env: TOXENV=py35, python: '3.5', os: linux, dist: xenial, language: python}
-  - {env: TOXENV=py35, python: '3.5', os: osx, osx_image: xcode10, language: generic}
-  - {env: TOXENV=py36, python: '3.6', os: linux, dist: xenial, language: python}
-  - {env: TOXENV=py36, python: '3.6', os: osx, osx_image: xcode10, language: generic}
-  - {env: TOXENV=py37, python: '3.7', os: linux, dist: xenial, language: python, sudo: required}  # NOTE: sudo: required is a workaround to https://github.com/travis-ci/travis-ci/issues/9815
-  - {env: TOXENV=py37, python: '3.7', os: osx, osx_image: xcode10, language: generic}
+  - {env: TOXENV=pre-commit, python: '3.6', os: linux, dist: bionic, language: python}
+  - {env: TOXENV=py27, python: '2.7', os: linux, dist: bionic, language: python}
+  - {env: TOXENV=py27, python: '2.7', os: osx, osx_image: xcode11.5, language: generic}
+  - {env: TOXENV=py35, python: '3.5', os: linux, dist: bionic, language: python}
+  - {env: TOXENV=py35, python: '3.5', os: osx, osx_image: xcode11.5, language: generic}
+  - {env: TOXENV=py36, python: '3.6', os: linux, dist: bionic, language: python}
+  - {env: TOXENV=py36, python: '3.6', os: osx, osx_image: xcode11.5, language: generic}
+  - {env: TOXENV=py37, python: '3.7', os: linux, dist: bionic, language: python, sudo: required}  # NOTE: sudo: required is a workaround to https://github.com/travis-ci/travis-ci/issues/9815
+  - {env: TOXENV=py37, python: '3.7', os: osx, osx_image: xcode11.5, language: generic}
   # TODO(maci): Add Windows tests
-  - {env: TOXENV=docs, python: '3.6', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=docs, python: '3.6', os: linux, dist: bionic, language: python}
 
   fast_finish: true
   allow_failures:
