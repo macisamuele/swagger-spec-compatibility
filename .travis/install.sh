@@ -39,7 +39,7 @@ if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
     # Ensure that the required python version is installed and install it if missing
     if ! pyenv versions --bare | grep -q "^${PYTHON}\$"; then
       # According to pyenv homebrew recommendations (https://github.com/yyuu/pyenv/wiki#suggested-build-environment)
-      time brew install openssl readline sqlite3 xz zlib
+      echo -e "openssl\nreadline\nsqlite3\nxz\nzlib" | time brew bundle --file=-
       time pyenv install ${PYTHON}
       # Register pyenv
       pyenv local ${PYTHON}
