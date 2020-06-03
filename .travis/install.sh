@@ -23,9 +23,7 @@ esac
 
 if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
     # Ensure that pyenv is installed and install it if missing
-    if ! find $(brew --prefix)/Cellar/pyenv/*/bin/pyenv -quit; then
-      time brew install pyenv
-    fi
+    brew info pyenv || time brew install pyenv
 
     # Ensure that pyenv is at least at version ${MIN_PYENV_VERSION} and upgrade it if needed
     if ! pyenv --version | cut -d' ' -f 2 | python -c "from distutils.version import LooseVersion; exit(LooseVersion(raw_input()) < LooseVersion('${MIN_PYENV_VERSION}'))"; then
@@ -39,7 +37,9 @@ if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
     # Ensure that the required python version is installed and install it if missing
     if ! pyenv versions --bare | grep -q "^${PYTHON}\$"; then
       # According to pyenv homebrew recommendations (https://github.com/yyuu/pyenv/wiki#suggested-build-environment)
-      echo -e "openssl\nreadline\nsqlite3\nxz\nzlib" | time brew bundle --file=-
+      for dependency in openssl readline sqlite3 xz zlib; do
+        brew info ${dependency} || brew install ${dependency}
+      done
       time pyenv install ${PYTHON}
       # Register pyenv
       pyenv local ${PYTHON}
